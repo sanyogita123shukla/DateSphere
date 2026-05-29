@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "3000:3000"
+    volumes:
+      - db-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:-datesphere-production-secret-please-change}
+      - CORS_ORIGIN=http://localhost
+    restart: unless-stopped
+
+  client:
+    build: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    restart: unless-stopped
+
+volumes:
+  db-data:
